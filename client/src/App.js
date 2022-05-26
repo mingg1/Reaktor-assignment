@@ -1,15 +1,32 @@
-import './App.css';
+import { React, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Home from './Home';
+import Detail from './Detail';
+import Header from './components/Header';
 
-function App() {
+const App = () => {
+  const [packageList, setPackageList] = useState([]);
   return (
-    <div className="App">
-      <form action="POST">
-        <label>Put poetry.lock file to see the list of packages!</label>
-        <input type="file" name="poetry" id="poetry" accept=".lock" />
-        <button type="submit">Show list</button>
-      </form>
-    </div>
+    <>
+      <Header />
+      <div className="App">
+        <Routes>
+          <Route
+            path="/"
+            exact
+            element={
+              <Home data={packageList} setPackageList={setPackageList} />
+            }
+          ></Route>
+          <Route
+            path="/:id"
+            exact
+            element={<Detail data={packageList} />}
+          ></Route>
+        </Routes>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
