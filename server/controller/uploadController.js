@@ -1,11 +1,17 @@
 const separator = ' = ';
 const doubleQuotesPattern = /^"|"$/g;
+const targetVersion = 1.1;
 
 const removeDoubleQuotes = (text) => text.replace(doubleQuotesPattern, '');
 
+const checkVersion = (versionText) => {
+  const version = parseFloat(removeDoubleQuotes(versionText));
+  return version === targetVersion;
+};
+
 const addDependencies = (packageArr, list) => {
   packageArr.forEach((line) => {
-    if (line !== '[') {
+    if (line[0] !== '[') {
       const dependency = line.split(separator)[0];
       list.push(dependency);
     }
@@ -15,16 +21,29 @@ const addDependencies = (packageArr, list) => {
 export const parsePoetry = (req, res) => {
   try {
     const poetryFile = req.file.buffer.toString('utf8');
+    // divide the file into packages section and metadata section
+    const splittedPoetry = poetryFile.trim().split('\n[metadata]');
 
-    const rawPackageList = poetryFile
+    const lockVersion = splittedPoetry[1]
+      .trim()
+      .split('\n')[0]
+      .split(separator)[1];
+
+    if (!checkVersion(lockVersion))
+      return res.json({
+        error: `not targeted version (${targetVersion})! (uploaded file: ${lockVersion})`,
+        packages: null,
+      });
+
+    const rawPackageList = splittedPoetry[0]
       .trim()
       .split('[[package]]\n')
-      .filter((pkg) => pkg)
-      .map((pkg) =>
-        pkg
+      .filter((p) => p)
+      .map((i) =>
+        i
           .trim()
           .split('\n\n')
-          .map((section) => section.split('\n'))
+          .map((d) => d.split('\n'))
       );
 
     const packageList = rawPackageList.reduce((list, pkg, index) => {
