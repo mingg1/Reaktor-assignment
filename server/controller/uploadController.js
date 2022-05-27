@@ -1,22 +1,4 @@
-const separator = ' = ';
-const doubleQuotesPattern = /^"|"$/g;
-const targetVersion = 1.1;
-
-const removeDoubleQuotes = (text) => text.replace(doubleQuotesPattern, '');
-
-const checkVersion = (versionText) => {
-  const version = parseFloat(removeDoubleQuotes(versionText));
-  return version === targetVersion;
-};
-
-const addDependencies = (packageArr, list) => {
-  packageArr.forEach((line) => {
-    if (line[0] !== '[') {
-      const dependency = line.split(separator)[0];
-      list.push(dependency);
-    }
-  });
-};
+import { PoetryLockParser } from '../util/lockParser.js';
 
 export const parsePoetry = (req, res) => {
   try {
@@ -27,11 +9,11 @@ export const parsePoetry = (req, res) => {
     const lockVersion = splittedPoetry[1]
       .trim()
       .split('\n')[0]
-      .split(separator)[1];
+      .split(PoetryLockParser.separator)[1];
 
-    if (!checkVersion(lockVersion))
+    if (!PoetryLockParser.checkVersion(lockVersion))
       return res.json({
-        error: `not targeted version (${targetVersion})! (uploaded file: ${lockVersion})`,
+        error: `not targeted version (${PoetryLockParser.targetVersion})! (uploaded file: ${lockVersion})`,
         packages: null,
       });
 
@@ -54,16 +36,16 @@ export const parsePoetry = (req, res) => {
       pkg.forEach((section) => {
         packageObj['id'] = index + 1;
         if (section.includes('[package.extras]')) {
-          addDependencies(section, extraDependencyList);
+          PoetryLockParser.addDependencies(section, extraDependencyList);
           packageObj['extra_dependency'] = extraDependencyList;
         } else if (section.includes('[package.dependencies]')) {
-          addDependencies(section, dependencyList);
+          PoetryLockParser.addDependencies(section, dependencyList);
           packageObj['dependency'] = dependencyList;
         } else {
           section.forEach((line) => {
-            const keyVal = line.split(separator);
+            const keyVal = line.split(PoetryLockParser.separator);
             const key = keyVal[0].trim();
-            const value = removeDoubleQuotes(keyVal[1]);
+            const value = PoetryLockParser.removeDoubleQuotes(keyVal[1]);
             packageObj[key] = value;
           });
         }
