@@ -1,10 +1,10 @@
-import { React, useEffect, useState, useRef } from 'react';
+import { React } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import PackageInfo from './components/PackageInfo';
 
 const Detail = ({ data }) => {
   const { id } = useParams();
   const currentPackage = data.find((pkg) => pkg.id === +id);
-  //const [reverseDependency, setReverseDependency] = useState([]);
 
   const getReverseDependencies = (pkgName) => {
     return data.reduce((acc, cur, index) => {
@@ -26,27 +26,39 @@ const Detail = ({ data }) => {
     }, []);
   };
 
+  const getDependencyId = (pkgName) => {
+    return data.find((pkg) => pkg.name === pkgName)?.id;
+  };
+
   return (
-    <div>
-      <Link to={'/'}>back</Link>
-      <h1>{currentPackage?.name}</h1>
-      <h3>Description</h3>
-      {currentPackage?.description}
-      <h3>Dependencies ({currentPackage?.dependency?.length || 0})</h3>
-      {currentPackage?.dependency?.map((dep) => {
-        const depId = data.find((pkg) => pkg.name === dep).id;
-        console.log(depId);
-        return <Link to={`/${depId}`}>{dep}</Link>;
-      })}
-      <h3>Reverse dependencies</h3>
-      {getReverseDependencies(currentPackage.name).map((dep) => {
-        return <Link to={`/${dep.id}`}>{dep.name}</Link>;
-      })}
-      <h3>Optional dependencies</h3>
-      {currentPackage?.extra_dependency?.map((dep, i) => (
-        <p key={i}>{dep}</p>
-      ))}
-    </div>
+    <main>
+      <section>
+        <Link to={'/'}>back</Link>
+        <h1>{currentPackage?.name}</h1>
+        <hr />
+        <PackageInfo title="Description">
+          <p>{currentPackage?.description}</p>
+        </PackageInfo>
+        <PackageInfo
+          title={`Dependencies (${currentPackage?.dependency?.length || 0})`}
+          dependencies={currentPackage?.dependency}
+          getDependencyId={getDependencyId}
+        />
+        <PackageInfo
+          title={`Reverse Dependencies (${
+            getReverseDependencies(currentPackage?.name).length || 0
+          })`}
+          dependencies={getReverseDependencies(currentPackage?.name)}
+        />
+        <PackageInfo
+          title={`Optional Dependencies (${
+            currentPackage?.extra_dependency?.length || 0
+          })`}
+          dependencies={currentPackage?.extra_dependency}
+          getDependencyId={getDependencyId}
+        />
+      </section>
+    </main>
   );
 };
 
