@@ -1,9 +1,10 @@
 import { React } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import PackageInfo from './components/PackageInfo';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import PackageInfo from '../components/PackageInfo';
 
 const Detail = ({ data }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const currentPackage = data.find((pkg) => pkg.id === +id);
 
   const getReverseDependencies = (pkgName) => {
@@ -33,7 +34,17 @@ const Detail = ({ data }) => {
   return (
     <main>
       <section>
-        <Link to={'/'}>back</Link>
+        <div className="link-container">
+          <button
+            className="back"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Back
+          </button>
+          <Link to={'/'}>To list</Link>
+        </div>
         <h1>{currentPackage?.name}</h1>
         <hr />
         <PackageInfo title="Description">

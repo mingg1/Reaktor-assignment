@@ -1,6 +1,6 @@
 import { React } from 'react';
 import { Link } from 'react-router-dom';
-import FileForm from './components/FileForm';
+import FileForm from '../components/FileForm';
 const Home = ({
   data,
   setPackageList,

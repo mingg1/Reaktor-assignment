@@ -157,12 +157,22 @@ li {
   color: var(--content-color);
 }
 
-a {
+a,
+.back {
   text-decoration: none;
   color: var(--content-color);
 }
 
-a:hover {
+.back {
+  padding: 0;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+a:hover,
+.back:hover {
+  background-color: transparent;
   color: var(--accent-color);
 }
 
@@ -186,4 +196,9 @@ mark {
   border-radius: 1rem;
   border: var(--border-style);
   vertical-align: middle;
+}
+
+.link-container {
+  display: flex;
+  gap: 2rem;
 }

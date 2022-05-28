@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import Detail from './Detail';
-import Header from './components/Header';
+import Header from '../components/Header';
 
 const App = () => {
   const [packageList, setPackageList] = useState([]);
