@@ -4,7 +4,7 @@
   "description": "Assignment project from Reaktor",
   "main": "server/index.js",
   "scripts": {
-    "start": "nodemon server/index.js",
+    "start": "node server/index.js",
     "build": "cd client && npm i && npm run build"
   },
   "repository": {
