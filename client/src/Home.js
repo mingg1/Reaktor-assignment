@@ -2,7 +2,7 @@ import { React, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 const Home = ({ data, setPackageList }) => {
   //   const [packageList, setPackageList] = useState([]);
-  const [selectedFile, setSelectedFile] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileRef = useRef();
 
   const sortPackageList = (list) => {
@@ -15,7 +15,7 @@ const Home = ({ data, setPackageList }) => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    // if (selectedFile.keys().length === 0) return alert('choose a file!');
+    if (!selectedFile) return alert('Choose a file first!');
     const formData = new FormData();
     formData.append('poetry', selectedFile);
     try {
@@ -42,31 +42,43 @@ const Home = ({ data, setPackageList }) => {
   };
 
   return (
-    <div>
+    <main>
       {!data.length ? (
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="poetry">
-            Add poetry.lock file to see the list of packages!
-          </label>
-          <input
-            ref={fileRef}
-            type="file"
-            name="poetry"
-            id="poetry"
-            accept=".lock"
-            onChange={handleSelectedChange}
-            required
-          />
-          <button type="submit">Show package list</button>
-        </form>
-      ) : (
-        data.map((pkg, i) => (
-          <div key={pkg.id} style={{ display: 'flex' }}>
-            <Link to={`/${pkg.id}`}>{pkg.name}</Link>
+        <section>
+          <h1 className="instruction">Welcome to Poetry.lock parser!</h1>
+          <h3 className="instruction">
+            Add <mark>poetry.lock</mark> file to see the list of packages 📂
+          </h3>
+          <div className="form-container">
+            <h5>{selectedFile?.name || 'no file selected'}</h5>
+            <form onSubmit={handleSubmit} className="main-form">
+              <label htmlFor="poetry">Browse</label>
+              <input
+                ref={fileRef}
+                type="file"
+                name="poetry"
+                id="poetry"
+                accept=".lock"
+                onChange={handleSelectedChange}
+              />
+              <button type="submit">Show package list</button>
+            </form>
           </div>
-        ))
+        </section>
+      ) : (
+        <section>
+          <h1>Packages ({data.length})</h1>
+          <ul>
+            {data.map((pkg) => (
+              <li key={pkg.id} style={{ display: 'flex' }}>
+                <Link to={`/${pkg.id}`}>{pkg.name}</Link>
+                <hr />
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
-    </div>
+    </main>
   );
 };
 
