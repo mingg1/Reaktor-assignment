@@ -6,14 +6,27 @@ import Header from './components/Header';
 
 const App = () => {
   const [packageList, setPackageList] = useState([]);
+  const [uploadedFileName, setUploadedFileName] = useState('');
   return (
     <>
-      <Header isData={packageList.length !== 0} />
+      <Header
+        setPackageList={setPackageList}
+        uploadedFileName={uploadedFileName}
+        setUploadedFileName={setUploadedFileName}
+        isData={packageList.length !== 0}
+      />
       <Routes>
         <Route
           path="/"
           exact
-          element={<Home data={packageList} setPackageList={setPackageList} />}
+          element={
+            <Home
+              data={packageList}
+              setPackageList={setPackageList}
+              uploadedFileName={uploadedFileName}
+              setUploadedFileName={setUploadedFileName}
+            />
+          }
         ></Route>
         <Route
           path="/:id"
