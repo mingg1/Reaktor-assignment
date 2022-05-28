@@ -9,7 +9,7 @@ const Header = ({
 }) => (
   <header>
     <Link to="/">
-      <img src={logo} width="50" height="50" />
+      <img src={logo} width="50" height="50" alt="logo" />
     </Link>
     <h3>poetry.lock parser</h3>
     {isData && (
