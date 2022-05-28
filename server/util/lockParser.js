@@ -21,8 +21,10 @@ export class PoetryLockParser {
 
   static addDependencies = (packageArr, list) => {
     packageArr.forEach((line) => {
-      if (line[0] !== '[') {
-        const dependency = line.split(this.#separator)[0];
+      if (['[', ']', '{', '}'].indexOf(line.trim()[0]) === -1) {
+        const dependency = this.removeDoubleQuotes(
+          line.split(this.#separator)[0]
+        );
         list.push(dependency);
       }
     });
