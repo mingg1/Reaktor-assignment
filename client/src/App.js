@@ -8,23 +8,19 @@ const App = () => {
   const [packageList, setPackageList] = useState([]);
   return (
     <>
-      <Header />
-      <div className="App">
-        <Routes>
-          <Route
-            path="/"
-            exact
-            element={
-              <Home data={packageList} setPackageList={setPackageList} />
-            }
-          ></Route>
-          <Route
-            path="/:id"
-            exact
-            element={<Detail data={packageList} />}
-          ></Route>
-        </Routes>
-      </div>
+      <Header isData={packageList.length !== 0} />
+      <Routes>
+        <Route
+          path="/"
+          exact
+          element={<Home data={packageList} setPackageList={setPackageList} />}
+        ></Route>
+        <Route
+          path="/:id"
+          exact
+          element={<Detail data={packageList} />}
+        ></Route>
+      </Routes>
     </>
   );
 };
