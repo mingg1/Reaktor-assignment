@@ -160,6 +160,7 @@ dist
 *.lock
 
 client/build
+
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
